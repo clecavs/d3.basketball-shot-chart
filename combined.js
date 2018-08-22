@@ -1,26 +1,708 @@
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e(require("d3")):"function"==typeof define&&define.amd?define("d3.chart",["d3"],e):"object"==typeof exports?exports["d3.chart"]=e(require("d3")):t["d3.chart"]=e(t.d3)}(this,function(t){return function(t){var e={};function n(r){if(e[r])return e[r].exports;var i=e[r]={exports:{},id:r,loaded:!1};return t[r].call(i.exports,i,i.exports,n),i.loaded=!0,i.exports}return n.m=t,n.c=e,n.p="",n(0)}([function(t,e,n){var r;void 0===(r=function(t,e,r){"use strict";var i=n(1),a=n(2),s=n(3);s(/^3\./.test(i.version),"d3.js version 3 is required"),n(4),i.chart=function(t){return 0===arguments.length?a:1===arguments.length?a[t]:a.extend.apply(a,arguments)},i.selection.prototype.chart=function(t,e){if(0===arguments.length)return this._chart;var n=a[t];return s(n,"No chart registered with name '"+t+"'"),new n(this,e)},i.selection.enter.prototype.chart=function(){return this._chart},i.transition.prototype.chart=i.selection.enter.prototype.chart,r.exports=i.chart}.call(e,n,e,t))||(t.exports=r)},function(e,n){e.exports=t},function(t,e,n){var r;void 0===(r=function(t,e,r){"use strict";var i=n(3),a=Object.hasOwnProperty;function s(t){var e,n,r,i;if(!t)return t;for(n=arguments.length,e=1;e<n;e++)if(r=arguments[e])for(i in r)t[i]=r[i];return t}var o=function(t,e){var n=this.constructor,r=n.__super__;r&&o.call(r,t,e),a.call(n.prototype,"initialize")&&this.initialize.apply(t,e)},h=function(t,e){var n=this.constructor,r=n.__super__;return this===t&&a.call(this,"transform")&&(e=this.transform(e)),a.call(n.prototype,"transform")&&(e=n.prototype.transform.call(t,e)),r&&(e=h.call(r,t,e)),e},c=function(t,e){this.base=t,this._layers={},this._attached={},this._events={},e&&e.transform&&(this.transform=e.transform),o.call(this,this,[e])};c.prototype.initialize=function(){},c.prototype.unlayer=function(t){var e=this.layer(t);return delete this._layers[t],delete e._chart,e},c.prototype.layer=function(t,e,n){var r;if(1===arguments.length)return this._layers[t];if(2===arguments.length){if("function"==typeof e.draw)return e._chart=this,this._layers[t]=e,this._layers[t];i(!1,"When reattaching a layer, the second argument must be a d3.chart layer")}return r=e.layer(n),this._layers[t]=r,e._chart=this,r},c.prototype.attach=function(t,e){return 1===arguments.length?this._attached[t]:(this._attached[t]=e,e)},c.prototype.transform=function(t){return t},c.prototype.draw=function(t){var e,n,r;t=h.call(this,this,t);for(e in this._layers)this._layers[e].draw(t);for(n in this._attached)r=this.demux?this.demux(n,t):t,this._attached[n].draw(r)},c.prototype.on=function(t,e,n){return(this._events[t]||(this._events[t]=[])).push({callback:e,context:n||this,_chart:this}),this},c.prototype.once=function(t,e,n){var r=this,i=function(){r.off(t,i),e.apply(this,arguments)};return this.on(t,i,n)},c.prototype.off=function(t,e,n){var r,i,a,s,o,h;if(0===arguments.length){for(t in this._events)this._events[t].length=0;return this}if(1===arguments.length)return(a=this._events[t])&&(a.length=0),this;for(r=t?[t]:Object.keys(this._events),o=0;o<r.length;o++)for(i=r[o],h=(a=this._events[i]).length;h--;)s=a[h],(e&&e===s.callback||n&&n===s.context)&&a.splice(h,1);return this},c.prototype.trigger=function(t){var e,n,r=Array.prototype.slice.call(arguments,1),i=this._events[t];if(void 0!==i)for(e=0;e<i.length;e++)(n=i[e]).callback.apply(n.context,r);return this},c.extend=function(t,e,n){var r,i=this;s(r=e&&a.call(e,"constructor")?e.constructor:function(){return i.apply(this,arguments)},i,n);var o=function(){this.constructor=r};return o.prototype=i.prototype,r.prototype=new o,e&&s(r.prototype,e),r.__super__=i.prototype,c[t]=r,r},r.exports=c}.call(e,n,e,t))||(t.exports=r)},function(t,e,n){var r;void 0===(r=function(t,e,n){"use strict";n.exports=function(t,e){if(!t)throw new Error("[d3.chart] "+e)}}.call(e,n,e,t))||(t.exports=r)},function(t,e,n){var r;void 0===(r=function(t){"use strict";var e=n(1),r=n(5);e.selection.prototype.layer=function(t){var e,n=new r(this);if(n.dataBind=t.dataBind,n.insert=t.insert,"events"in t)for(e in t.events)n.on(e,t.events[e]);return this.on=function(){return n.on.apply(n,arguments)},this.off=function(){return n.off.apply(n,arguments)},this.draw=function(){return n.draw.apply(n,arguments)},this}}.call(e,n,e,t))||(t.exports=r)},function(t,e,n){var r;void 0===(r=function(t,e,r){"use strict";var i=n(1),a=n(3),s=/^(enter|update|merge|exit)(:transition)?$/,o=function(t){a(t,"Layers must be initialized with a base."),this._base=t,this._handlers={}};o.prototype.dataBind=function(){a(!1,"Layers must specify a `dataBind` method.")},o.prototype.insert=function(){a(!1,"Layers must specify an `insert` method.")},o.prototype.on=function(t,e,n){return n=n||{},a(s.test(t),"Unrecognized lifecycle event name specified to `Layer#on`: '"+t+"'."),t in this._handlers||(this._handlers[t]=[]),this._handlers[t].push({callback:e,chart:n.chart||null}),this._base},o.prototype.off=function(t,e){var n,r=this._handlers[t];if(a(s.test(t),"Unrecognized lifecycle event name specified to `Layer#off`: '"+t+"'."),!r)return this._base;if(1===arguments.length)return r.length=0,this._base;for(n=r.length-1;n>-1;--n)r[n].callback===e&&r.splice(n,1);return this._base},o.prototype.draw=function(t){var e,n,r,s,o,h,c,l,u;e=this.dataBind.call(this._base,t),a(e&&e.call===i.selection.prototype.call,"Invalid selection defined by `Layer#dataBind` method."),a(e.enter,"Layer selection not properly bound."),(n=e.enter())._chart=this._base._chart;for(var d=0,f=(r=[{name:"update",selection:e},{name:"enter",selection:n,method:this.insert},{name:"merge",selection:e},{name:"exit",selection:e,method:e.exit}]).length;d<f;++d)if(c=r[d].name,s=r[d].selection,"function"==typeof(o=r[d].method)&&(s=o.call(s)),!s.empty()){if(a(s&&s.call===i.selection.prototype.call,"Invalid selection defined for '"+c+"' lifecycle event."),h=this._handlers[c])for(l=0,u=h.length;l<u;++l)s._chart=h[l].chart||this._base._chart,s.call(h[l].callback);if((h=this._handlers[c+":transition"])&&h.length)for(s=s.transition(),l=0,u=h.length;l<u;++l)s._chart=h[l].chart||this._base._chart,s.call(h[l].callback)}},r.exports=o}.call(e,n,e,t))||(t.exports=r)}])}),d3.chart.initializeDefaults=function(t,e,n){chartProto=t.prototype,function(t,e){if((e=d3.map(e||{})).forEach(function(e,n){var r="_"+e;t[r]=n,t[e]=function(t){return arguments.length?(this[r]=t,this.trigger("change:"+e,t),this):this[r]}}),e.size()){var n=t.initialize;t.initialize=function(t){for(var r in t)e.get(r)&&(this["_"+r]=t[r]);n.apply(this,arguments)}}}(chartProto,e),function(t,e){if((e=d3.map(e||{})).size()>0){for(var n=e.values(),r={},i=0,a=n.length;i<a;++i){var s=n[i],o=s,h=!1;s.match(/^debounce:/i)&&(o=s.substr(9),h=!0),r[s]={fn:t[o],debounce:h}}var c=t.initialize;t.initialize=function(){c.apply(this,arguments);for(var t in r){var n=r[t],i=n.fn.bind(this);n.boundFn=n.debounce?h(i):i}var a=this;e.forEach(function(t,e){for(var n=t.split(/\s+/),i=0,s=n.length;i<s;++i)a.on("change:"+n[i],r[e].boundFn)})}}}(chartProto,n)},function(){d3.hexbin=function(){var r,i,a,s,o=1,h=1,c=e,l=n;function u(t){var e={};return t.forEach(function(t,n){var r=l.call(u,t,n)/s,o=Math.round(r),h=c.call(u,t,n)/a-(1&o?.5:0),d=Math.round(h),f=r-o;if(3*Math.abs(f)>1){var p=h-d,g=d+(h<d?-1:1)/2,_=o+(r<o?-1:1),y=h-g,v=r-_;p*p+f*f>y*y+v*v&&(d=g+(1&o?1:-1)/2,o=_)}var x=d+"-"+o,b=e[x];b?b.push(t):((b=e[x]=[t]).i=d,b.j=o,b.x=(d+(1&o?.5:0))*a,b.y=o*s),i&&i(t,b)}),d3.values(e)}function d(e){var n=0,r=0;return t.map(function(t){var i=Math.sin(t)*e,a=-Math.cos(t)*e,s=i-n,o=a-r;return n=i,r=a,[s,o]})}return u.x=function(t){return arguments.length?(c=t,u):c},u.y=function(t){return arguments.length?(l=t,u):l},u.bin=function(t){return arguments.length?(i=t,u):i},u.hexagon=function(t){return arguments.length<1&&(t=r),"m"+d(t).join("l")+"z"},u.centers=function(){for(var t=[],e=0,n=!1,i=0;e<h+r;e+=s,n=!n,++i)for(var c=n?a/2:0,l=0;c<o+a/2;c+=a,++l){var u=[c,e];u.i=l,u.j=i,t.push(u)}return t},u.mesh=function(){var t=d(r).slice(0,4).join("l");return u.centers().map(function(e){return"M"+e+"m"+t}).join("")},u.size=function(t){return arguments.length?(o=+t[0],h=+t[1],u):[o,h]},u.radius=function(t){return arguments.length?(a=2*(r=+t)*Math.sin(Math.PI/3),s=1.5*r,u):r},u.radius(1)};var t=d3.range(0,2*Math.PI,Math.PI/3),e=function(t){return t[0]},n=function(t){return t[1]}}(),function(){var t=0,e=d3.chart("BasketballShotChart",{initialize:function(){this.calculateVisibleCourtLength();this.base.attr("class","shot-chart");this.drawCourt(),this.drawTitle(),this.drawLegend(),this.drawShots()},appendArcPath:function(t,e,n,r){var i=d3.scale.linear().domain([0,29]).range([n,r]),a=d3.svg.line.radial().interpolate("basis").tension(0).radius(e).angle(function(t,e){return i(e)});return t.append("path").datum(d3.range(30)).attr("d",a)},drawCourt:function(){var t=this._courtWidth,e=this._visibleCourtLength;this._keyWidth;threePointRadius=this._threePointRadius,threePointSideRadius=this._threePointSideRadius,threePointCutoffLength=this._threePointCutoffLength,freeThrowLineLength=this._freeThrowLineLength,freeThrowCircleRadius=this._freeThrowCircleRadius,basketProtrusionLength=this._basketProtrusionLength,basketDiameter=this._basketDiameter,basketWidth=this._basketWidth,restrictedCircleRadius=this._restrictedCircleRadius,keyMarkWidth=this._keyMarkWidth;var n=this.base.attr("width",this._width).attr("viewBox","0 0 "+t+" "+e).append("g").attr("class","shot-chart-court");this._height&&n.attr("height",this._height)},drawTitle:function(){this.base.append("text").classed("shot-chart-title",!0).attr("x",this._courtWidth/2).attr("y",(this._courtLength/2-this._visibleCourtLength)/3).attr("text-anchor","middle").text(this._title)},drawLegend:function(){var t=this._courtWidth,e=this._visibleCourtLength,n=this._heatScale,r=this._hexagonRadiusSizes,i=(this._hexagonFillValue,this._keyWidth),a=this._basketProtrusionLength,s=n.range(),o=r[r.length-1],h=t-(threePointSideRadius-i/2)/2-(t/2-threePointSideRadius),c=h-s.length*o,l=e-a/3,u=d3.hexbin(),d=u.hexagon(o),f=this.base.append("g").classed("legend",!0);f.append("text").classed("legend-title",!0).attr("x",h).attr("y",l-2*o).attr("text-anchor","middle").text(this._colorLegendTitle),f.append("text").attr("x",c).attr("y",l).attr("text-anchor","end").text(this._colorLegendStartLabel),f.append("text").attr("x",c+2*s.length*o).attr("y",l).attr("text-anchor","start").text(this._colorLegendEndLabel),f.selectAll("path").data(s).enter().append("path").attr("d",d).attr("transform",function(t,e){return"translate("+(c+(1+2*e)*o)+", "+l+")"}).style("fill",function(t,e){return t});for(var p=r.slice(-3),g=0,_=0,y=p.length;_<y;++_)g+=2*p[_];var v=(threePointSideRadius-i/2)/2+(t/2-threePointSideRadius),x=v-g/2,b=e-a/3,m=this.base.append("g").classed("legend",!0);m.append("text").classed("legend-title",!0).attr("x",v).attr("y",b-2*o).attr("text-anchor","middle").text(this._sizeLegendTitle),m.append("text").attr("x",x).attr("y",b).attr("text-anchor","end").text(this._sizeLegendSmallLabel),m.selectAll("path").data(p).enter().append("path").attr("d",function(t){return u.hexagon(t)}).attr("transform",function(t,e){return"translate("+((x+=2*t)-t)+", "+b+")"}).style("fill","#999"),m.append("text").attr("x",x).attr("y",b).attr("text-anchor","start").text(this._sizeLegendLargeLabel)},drawShots:function(){var e,n=this._courtWidth,r=this._visibleCourtLength,i=this._hexagonRadius,a=this._heatScale,s=this._hexagonBinVisibleThreshold,o=this._hexagonRadiusThreshold,h=this._hexagonRadiusSizes,c=this._hexagonRadiusValue,l=this._hexagonFillValue,u=d3.hexbin().size([n,r]).radius(i).x(this._translateX.bind(this)).y(this._translateY.bind(this)).bin(this._hexagonBin),d=this.base.append("g"),f="bbs-clip-"+(t+=1);d.append("clipPath").attr("id",f).append("rect").attr("class","shot-chart-mesh").attr("width",n).attr("height",r),this.layer("hexagons",d,{dataBind:function(t){for(var n=u(t),r=[],i=[],a=0,c=n.length;a<c;++a){for(var l=n[a],d=0,p=0,g=l.length;p<g;++p)d+=l[p].attempts||1;d>s&&r.push(l),d>o&&i.push(d)}return e=d3.scale.quantile().domain(i).range(h),this.append("g").attr("clip-path","url(#"+f+")").selectAll(".hexagon").data(r)},insert:function(){return this.append("path").classed("shot-chart-hexagon",!0)},events:{enter:function(){this.attr("transform",function(t){return"translate("+t.x+","+t.y+")"})},merge:function(){this.attr("d",function(t){var n=e(c(t));if(n>0)return u.hexagon(n)}).style("fill",function(t){return a(l(t))})},exit:function(){this.remove()}}})},redraw:function(){this.data&&this.draw(this.data)},calculateVisibleCourtLength:function(){var t=this._courtLength/2,e=this._threePointRadius+this._basketProtrusionLength;this._visibleCourtLength=e+(t-e)/2}});d3.chart.initializeDefaults(e,{basketDiameter:1.5,basketProtrusionLength:4,basketWidth:6,colorLegendTitle:"Efficiency",colorLegendStartLabel:"< avg",colorLegendEndLabel:"> avg",courtLength:94,courtWidth:50,freeThrowLineLength:19,freeThrowCircleRadius:6,heatScale:d3.scale.quantize().domain([0,1]).range(["#5458A2","#6689BB","#FADC97","#F08460","#B02B48"]),height:void 0,hexagonBin:function(t,e){var n=t.attempts||1,r=+t.made||0;e.attempts=(e.attempts||0)+n,e.made=(e.made||0)+r},hexagonBinVisibleThreshold:1,hexagonFillValue:function(t){return t.made/t.attempts},hexagonRadius:.75,hexagonRadiusSizes:[0,.4,.6,.75],hexagonRadiusThreshold:2,hexagonRadiusValue:function(t){return t.attempts},keyMarkWidth:.5,keyWidth:16,restrictedCircleRadius:4,sizeLegendTitle:"Frequency",sizeLegendSmallLabel:"low",sizeLegendLargeLabel:"high",threePointCutoffLength:14,threePointRadius:23.75,threePointSideRadius:22,title:"Shot chart",translateX:function(t){return t.x},translateY:function(t){return this._visibleCourtLength-t.y},width:500})}();
+define(function(require, exports, module) {
+	"use strict";
+	var assert = require("./assert");
+	var hasOwnProp = Object.hasOwnProperty;
 
-var data = [{"x":2,"y":9,"made":3,"attempts":3,"z":1.77},{"x":2,"y":8,"made":0,"attempts":4,"z":-0.96},{"x":2,"y":4,"made":0,"attempts":1,"z":-0.9},{"x":2,"y":6,"made":1,"attempts":2,"z":0.35},{"x":2,"y":13,"made":0,"attempts":1,"z":-0.83},{"x":2,"y":11,"made":1,"attempts":3,"z":-0.26},{"x":48,"y":10,"made":1,"attempts":2,"z":0.41},{"x":48,"y":7,"made":1,"attempts":1,"z":1.93},{"x":48,"y":8,"made":2,"attempts":4,"z":0.46},{"x":48,"y":6,"made":0,"attempts":2,"z":-1.33},{"x":48,"y":11,"made":1,"attempts":2,"z":0.39},{"x":48,"y":18,"made":1,"attempts":1,"z":1.09},{"x":48,"y":9,"made":0,"attempts":1,"z":-1.1},{"x":48,"y":4,"made":1,"attempts":1,"z":1.54},{"x":48,"y":5,"made":0,"attempts":1,"z":-1.08},{"x":49,"y":12,"made":1,"attempts":1,"z":1.29},{"x":49,"y":7,"made":1,"attempts":1,"z":1.4},{"x":49,"y":5,"made":3,"attempts":3,"z":1.49},{"x":22,"y":7,"made":11,"attempts":15,"z":0.9},{"x":22,"y":6,"made":4,"attempts":6,"z":0.48},{"x":22,"y":10,"made":2,"attempts":3,"z":0.81},{"x":22,"y":8,"made":3,"attempts":4,"z":0.83},{"x":22,"y":25,"made":0,"attempts":1,"z":-0.89},{"x":22,"y":31,"made":1,"attempts":1,"z":1.93},{"x":22,"y":9,"made":0,"attempts":1,"z":-0.89},{"x":23,"y":7,"made":38,"attempts":50,"z":0.83},{"x":23,"y":8,"made":9,"attempts":17,"z":0.2},{"x":23,"y":6,"made":31,"attempts":42,"z":0.53},{"x":23,"y":9,"made":2,"attempts":3,"z":0.76},{"x":23,"y":14,"made":0,"attempts":1,"z":-0.88},{"x":23,"y":10,"made":2,"attempts":3,"z":0.84},{"x":23,"y":12,"made":0,"attempts":1,"z":-0.91},{"x":23,"y":16,"made":0,"attempts":1,"z":-0.92},{"x":23,"y":34,"made":0,"attempts":1,"z":-0.5},{"x":23,"y":15,"made":1,"attempts":2,"z":0.4},{"x":23,"y":23,"made":1,"attempts":1,"z":1.17},{"x":23,"y":18,"made":1,"attempts":2,"z":-0.03},{"x":23,"y":5,"made":2,"attempts":2,"z":1.07},{"x":23,"y":19,"made":0,"attempts":2,"z":-1.09},{"x":23,"y":11,"made":0,"attempts":1,"z":-0.99},{"x":23,"y":22,"made":0,"attempts":1,"z":-0.82},{"x":23,"y":33,"made":1,"attempts":1,"z":1.05},{"x":24,"y":8,"made":12,"attempts":20,"z":0.22},{"x":24,"y":6,"made":75,"attempts":81,"z":1.18},{"x":24,"y":21,"made":1,"attempts":3,"z":-0.4},{"x":24,"y":7,"made":64,"attempts":81,"z":0.63},{"x":24,"y":15,"made":1,"attempts":2,"z":0.19},{"x":24,"y":9,"made":5,"attempts":6,"z":1.14},{"x":24,"y":5,"made":3,"attempts":3,"z":0.9},{"x":24,"y":30,"made":0,"attempts":1,"z":-0.81},{"x":24,"y":13,"made":2,"attempts":2,"z":1.47},{"x":24,"y":24,"made":1,"attempts":1,"z":1.51},{"x":24,"y":35,"made":0,"attempts":1,"z":-0.71},{"x":24,"y":18,"made":1,"attempts":1,"z":1.32},{"x":24,"y":19,"made":0,"attempts":2,"z":-0.91},{"x":24,"y":32,"made":1,"attempts":1,"z":1.62},{"x":24,"y":10,"made":1,"attempts":1,"z":1.52},{"x":24,"y":34,"made":0,"attempts":1,"z":-0.55},{"x":24,"y":33,"made":1,"attempts":1,"z":1.66},{"x":24,"y":25,"made":0,"attempts":2,"z":-0.92},{"x":24,"y":12,"made":0,"attempts":2,"z":-0.93},{"x":24,"y":31,"made":1,"attempts":2,"z":0.4},{"x":24,"y":14,"made":1,"attempts":1,"z":1.28},{"x":26,"y":7,"made":39,"attempts":57,"z":0.29},{"x":26,"y":15,"made":0,"attempts":1,"z":-0.83},{"x":26,"y":9,"made":3,"attempts":3,"z":1.57},{"x":26,"y":8,"made":12,"attempts":17,"z":0.66},{"x":26,"y":6,"made":23,"attempts":29,"z":0.73},{"x":26,"y":31,"made":1,"attempts":3,"z":0.0},{"x":26,"y":27,"made":1,"attempts":1,"z":1.5},{"x":26,"y":5,"made":0,"attempts":1,"z":-1.58},{"x":26,"y":24,"made":0,"attempts":1,"z":-0.85},{"x":26,"y":12,"made":2,"attempts":2,"z":1.42},{"x":26,"y":23,"made":1,"attempts":2,"z":0.24},{"x":26,"y":32,"made":1,"attempts":2,"z":0.37},{"x":25,"y":7,"made":68,"attempts":80,"z":1.0},{"x":25,"y":6,"made":82,"attempts":98,"z":0.58},{"x":25,"y":31,"made":1,"attempts":8,"z":-0.59},{"x":25,"y":8,"made":18,"attempts":26,"z":0.52},{"x":25,"y":9,"made":1,"attempts":3,"z":-0.43},{"x":25,"y":11,"made":5,"attempts":5,"z":1.58},{"x":25,"y":5,"made":6,"attempts":6,"z":0.82},{"x":25,"y":28,"made":0,"attempts":1,"z":-0.88},{"x":25,"y":15,"made":2,"attempts":2,"z":1.49},{"x":25,"y":21,"made":1,"attempts":2,"z":0.23},{"x":25,"y":12,"made":2,"attempts":2,"z":1.61},{"x":25,"y":10,"made":2,"attempts":3,"z":0.82},{"x":25,"y":32,"made":1,"attempts":2,"z":0.15},{"x":25,"y":18,"made":1,"attempts":2,"z":0.14},{"x":25,"y":25,"made":1,"attempts":1,"z":1.36},{"x":25,"y":14,"made":1,"attempts":2,"z":0.24},{"x":25,"y":13,"made":0,"attempts":1,"z":-1.05},{"x":25,"y":30,"made":0,"attempts":1,"z":-0.85},{"x":25,"y":22,"made":0,"attempts":1,"z":-0.82},{"x":32,"y":10,"made":3,"attempts":5,"z":0.64},{"x":32,"y":25,"made":1,"attempts":2,"z":0.17},{"x":32,"y":15,"made":1,"attempts":2,"z":0.25},{"x":32,"y":32,"made":0,"attempts":1,"z":-0.78},{"x":32,"y":6,"made":0,"attempts":1,"z":-0.83},{"x":32,"y":9,"made":0,"attempts":1,"z":-0.96},{"x":32,"y":14,"made":0,"attempts":1,"z":-0.93},{"x":32,"y":23,"made":1,"attempts":1,"z":1.12},{"x":32,"y":30,"made":0,"attempts":2,"z":-0.85},{"x":32,"y":16,"made":0,"attempts":1,"z":-0.81},{"x":32,"y":19,"made":1,"attempts":1,"z":1.02},{"x":32,"y":29,"made":0,"attempts":1,"z":-0.76},{"x":32,"y":12,"made":1,"attempts":1,"z":1.24},{"x":32,"y":33,"made":0,"attempts":1,"z":-1.0},{"x":8,"y":25,"made":2,"attempts":5,"z":0.18},{"x":8,"y":4,"made":0,"attempts":1,"z":-0.82},{"x":8,"y":9,"made":0,"attempts":2,"z":-0.94},{"x":8,"y":6,"made":1,"attempts":1,"z":1.47},{"x":8,"y":15,"made":0,"attempts":3,"z":-0.83},{"x":8,"y":18,"made":2,"attempts":3,"z":0.37},{"x":8,"y":24,"made":1,"attempts":1,"z":1.58},{"x":8,"y":19,"made":1,"attempts":1,"z":1.29},{"x":8,"y":38,"made":0,"attempts":1,"z":0.0},{"x":8,"y":8,"made":1,"attempts":1,"z":1.18},{"x":8,"y":27,"made":1,"attempts":2,"z":0.54},{"x":8,"y":20,"made":0,"attempts":1,"z":-0.61},{"x":19,"y":10,"made":0,"attempts":1,"z":-0.82},{"x":19,"y":9,"made":1,"attempts":3,"z":0.03},{"x":19,"y":24,"made":1,"attempts":2,"z":0.18},{"x":19,"y":13,"made":1,"attempts":2,"z":0.19},{"x":19,"y":8,"made":0,"attempts":1,"z":-0.91},{"x":19,"y":22,"made":0,"attempts":1,"z":-1.01},{"x":19,"y":32,"made":1,"attempts":1,"z":1.39},{"x":19,"y":12,"made":2,"attempts":3,"z":0.71},{"x":19,"y":31,"made":0,"attempts":1,"z":-0.85},{"x":19,"y":30,"made":0,"attempts":1,"z":-0.85},{"x":41,"y":6,"made":0,"attempts":2,"z":-1.04},{"x":41,"y":26,"made":2,"attempts":3,"z":0.93},{"x":41,"y":20,"made":1,"attempts":2,"z":0.63},{"x":41,"y":7,"made":2,"attempts":5,"z":0.0},{"x":41,"y":12,"made":0,"attempts":1,"z":-1.01},{"x":41,"y":25,"made":1,"attempts":4,"z":-0.28},{"x":41,"y":8,"made":0,"attempts":1,"z":-0.89},{"x":41,"y":24,"made":1,"attempts":1,"z":1.5},{"x":41,"y":18,"made":1,"attempts":1,"z":1.31},{"x":41,"y":5,"made":0,"attempts":1,"z":-0.79},{"x":41,"y":28,"made":1,"attempts":1,"z":1.71},{"x":41,"y":17,"made":0,"attempts":1,"z":-1.02},{"x":41,"y":16,"made":1,"attempts":2,"z":0.07},{"x":36,"y":15,"made":1,"attempts":1,"z":1.0},{"x":36,"y":21,"made":1,"attempts":2,"z":0.36},{"x":36,"y":27,"made":1,"attempts":1,"z":1.2},{"x":36,"y":29,"made":2,"attempts":6,"z":0.02},{"x":36,"y":23,"made":0,"attempts":1,"z":-0.79},{"x":36,"y":7,"made":0,"attempts":1,"z":-1.01},{"x":36,"y":10,"made":1,"attempts":2,"z":0.17},{"x":36,"y":20,"made":0,"attempts":2,"z":-0.98},{"x":36,"y":11,"made":1,"attempts":1,"z":1.25},{"x":36,"y":22,"made":0,"attempts":1,"z":-0.79},{"x":36,"y":19,"made":0,"attempts":1,"z":-0.94},{"x":36,"y":26,"made":0,"attempts":2,"z":-1.01},{"x":36,"y":25,"made":0,"attempts":1,"z":-0.6},{"x":36,"y":17,"made":1,"attempts":1,"z":1.2},{"x":36,"y":8,"made":1,"attempts":1,"z":1.17},{"x":33,"y":10,"made":1,"attempts":2,"z":0.21},{"x":33,"y":11,"made":0,"attempts":2,"z":-0.83},{"x":33,"y":8,"made":1,"attempts":2,"z":0.13},{"x":33,"y":9,"made":1,"attempts":2,"z":0.19},{"x":33,"y":19,"made":0,"attempts":1,"z":-0.87},{"x":33,"y":23,"made":1,"attempts":2,"z":0.36},{"x":33,"y":24,"made":0,"attempts":2,"z":-1.06},{"x":33,"y":31,"made":0,"attempts":1,"z":-0.83},{"x":33,"y":27,"made":0,"attempts":2,"z":-0.88},{"x":33,"y":7,"made":0,"attempts":1,"z":-0.78},{"x":33,"y":5,"made":1,"attempts":1,"z":1.31},{"x":33,"y":21,"made":0,"attempts":1,"z":-0.84},{"x":33,"y":6,"made":1,"attempts":1,"z":1.03},{"x":33,"y":14,"made":1,"attempts":1,"z":1.48},{"x":33,"y":20,"made":1,"attempts":2,"z":0.19},{"x":30,"y":25,"made":1,"attempts":3,"z":-0.16},{"x":30,"y":32,"made":1,"attempts":2,"z":0.29},{"x":30,"y":23,"made":1,"attempts":1,"z":1.35},{"x":30,"y":9,"made":2,"attempts":2,"z":1.58},{"x":30,"y":13,"made":1,"attempts":1,"z":1.38},{"x":30,"y":10,"made":0,"attempts":1,"z":-0.79},{"x":30,"y":8,"made":1,"attempts":1,"z":1.46},{"x":30,"y":30,"made":0,"attempts":3,"z":-0.88},{"x":30,"y":20,"made":0,"attempts":1,"z":-1.14},{"x":30,"y":31,"made":0,"attempts":1,"z":-0.82},{"x":30,"y":11,"made":0,"attempts":1,"z":-0.87},{"x":30,"y":6,"made":1,"attempts":1,"z":1.46},{"x":30,"y":22,"made":0,"attempts":1,"z":-0.93},{"x":30,"y":7,"made":0,"attempts":1,"z":-0.75},{"x":30,"y":26,"made":0,"attempts":1,"z":-0.81},{"x":30,"y":16,"made":0,"attempts":1,"z":-0.81},{"x":20,"y":9,"made":2,"attempts":3,"z":0.73},{"x":20,"y":10,"made":1,"attempts":3,"z":-0.02},{"x":20,"y":15,"made":0,"attempts":1,"z":-0.76},{"x":20,"y":13,"made":1,"attempts":1,"z":1.23},{"x":20,"y":21,"made":0,"attempts":1,"z":-0.78},{"x":20,"y":12,"made":1,"attempts":2,"z":0.49},{"x":20,"y":34,"made":0,"attempts":1,"z":0.0},{"x":20,"y":7,"made":1,"attempts":1,"z":1.43},{"x":20,"y":8,"made":2,"attempts":2,"z":1.62},{"x":40,"y":18,"made":0,"attempts":1,"z":-0.91},{"x":40,"y":8,"made":0,"attempts":2,"z":-0.86},{"x":40,"y":28,"made":1,"attempts":2,"z":0.42},{"x":40,"y":26,"made":4,"attempts":5,"z":1.13},{"x":40,"y":16,"made":0,"attempts":1,"z":-0.93},{"x":40,"y":27,"made":0,"attempts":2,"z":-0.96},{"x":40,"y":6,"made":2,"attempts":3,"z":0.71},{"x":40,"y":32,"made":0,"attempts":1,"z":0.0},{"x":40,"y":12,"made":0,"attempts":1,"z":-0.89},{"x":40,"y":17,"made":2,"attempts":2,"z":1.56},{"x":40,"y":21,"made":1,"attempts":1,"z":1.4},{"x":40,"y":10,"made":2,"attempts":6,"z":-0.25},{"x":40,"y":25,"made":3,"attempts":4,"z":0.95},{"x":40,"y":7,"made":1,"attempts":1,"z":1.27},{"x":40,"y":11,"made":1,"attempts":3,"z":-0.22},{"x":40,"y":15,"made":1,"attempts":1,"z":1.28},{"x":40,"y":19,"made":1,"attempts":1,"z":1.07},{"x":40,"y":20,"made":1,"attempts":1,"z":1.18},{"x":40,"y":35,"made":0,"attempts":2,"z":0.0},{"x":40,"y":14,"made":1,"attempts":1,"z":1.61},{"x":14,"y":22,"made":0,"attempts":2,"z":-0.81},{"x":14,"y":9,"made":0,"attempts":1,"z":-0.89},{"x":14,"y":21,"made":0,"attempts":1,"z":-1.04},{"x":14,"y":32,"made":0,"attempts":1,"z":-0.76},{"x":14,"y":29,"made":3,"attempts":4,"z":0.96},{"x":14,"y":17,"made":0,"attempts":1,"z":-0.96},{"x":14,"y":23,"made":0,"attempts":1,"z":-0.84},{"x":14,"y":20,"made":1,"attempts":2,"z":0.2},{"x":14,"y":28,"made":1,"attempts":1,"z":1.76},{"x":14,"y":8,"made":0,"attempts":1,"z":-0.82},{"x":12,"y":38,"made":0,"attempts":1,"z":0.0},{"x":12,"y":28,"made":1,"attempts":2,"z":0.5},{"x":12,"y":12,"made":1,"attempts":1,"z":1.27},{"x":12,"y":17,"made":0,"attempts":1,"z":-0.76},{"x":12,"y":29,"made":1,"attempts":4,"z":-0.23},{"x":12,"y":6,"made":0,"attempts":1,"z":-0.9},{"x":12,"y":20,"made":1,"attempts":1,"z":1.15},{"x":12,"y":19,"made":1,"attempts":3,"z":-0.11},{"x":12,"y":23,"made":0,"attempts":1,"z":-0.76},{"x":12,"y":22,"made":0,"attempts":1,"z":-0.8},{"x":12,"y":24,"made":0,"attempts":1,"z":-0.69},{"x":12,"y":31,"made":1,"attempts":1,"z":1.14},{"x":12,"y":27,"made":0,"attempts":3,"z":-0.94},{"x":35,"y":12,"made":3,"attempts":3,"z":1.27},{"x":35,"y":20,"made":1,"attempts":1,"z":1.61},{"x":35,"y":10,"made":1,"attempts":3,"z":-0.09},{"x":35,"y":11,"made":0,"attempts":1,"z":-0.78},{"x":35,"y":23,"made":0,"attempts":2,"z":-0.76},{"x":35,"y":8,"made":0,"attempts":3,"z":-0.77},{"x":35,"y":29,"made":0,"attempts":1,"z":-0.91},{"x":35,"y":21,"made":2,"attempts":2,"z":1.22},{"x":35,"y":9,"made":1,"attempts":1,"z":1.45},{"x":35,"y":30,"made":2,"attempts":2,"z":1.71},{"x":35,"y":22,"made":0,"attempts":1,"z":-0.88},{"x":35,"y":32,"made":0,"attempts":2,"z":-0.76},{"x":35,"y":7,"made":0,"attempts":2,"z":-0.61},{"x":35,"y":25,"made":0,"attempts":1,"z":-0.83},{"x":35,"y":13,"made":0,"attempts":1,"z":-0.53},{"x":35,"y":14,"made":0,"attempts":1,"z":-0.8},{"x":35,"y":28,"made":0,"attempts":1,"z":-0.73},{"x":35,"y":44,"made":0,"attempts":1,"z":0.0},{"x":35,"y":6,"made":0,"attempts":1,"z":-0.96},{"x":9,"y":20,"made":1,"attempts":2,"z":0.26},{"x":9,"y":10,"made":1,"attempts":2,"z":0.14},{"x":9,"y":6,"made":0,"attempts":1,"z":-0.93},{"x":9,"y":7,"made":0,"attempts":1,"z":-0.97},{"x":9,"y":27,"made":0,"attempts":2,"z":-0.77},{"x":9,"y":29,"made":1,"attempts":1,"z":1.81},{"x":9,"y":9,"made":0,"attempts":2,"z":-0.96},{"x":9,"y":26,"made":0,"attempts":2,"z":-0.92},{"x":9,"y":25,"made":1,"attempts":3,"z":0.02},{"x":9,"y":8,"made":1,"attempts":1,"z":1.46},{"x":9,"y":19,"made":1,"attempts":1,"z":1.49},{"x":9,"y":13,"made":0,"attempts":1,"z":-0.89},{"x":9,"y":12,"made":0,"attempts":1,"z":-0.92},{"x":9,"y":11,"made":0,"attempts":1,"z":-0.79},{"x":9,"y":18,"made":2,"attempts":2,"z":1.42},{"x":17,"y":12,"made":0,"attempts":1,"z":-0.81},{"x":17,"y":7,"made":2,"attempts":2,"z":1.43},{"x":17,"y":30,"made":0,"attempts":1,"z":-0.92},{"x":17,"y":19,"made":0,"attempts":2,"z":-0.83},{"x":17,"y":20,"made":0,"attempts":1,"z":-0.85},{"x":17,"y":8,"made":1,"attempts":2,"z":0.25},{"x":17,"y":11,"made":0,"attempts":1,"z":-0.88},{"x":17,"y":10,"made":0,"attempts":1,"z":-0.74},{"x":44,"y":6,"made":1,"attempts":1,"z":1.56},{"x":44,"y":21,"made":2,"attempts":5,"z":0.01},{"x":44,"y":42,"made":0,"attempts":2,"z":-0.58},{"x":44,"y":23,"made":1,"attempts":1,"z":1.74},{"x":44,"y":7,"made":1,"attempts":1,"z":1.25},{"x":44,"y":24,"made":1,"attempts":2,"z":0.3},{"x":44,"y":11,"made":0,"attempts":1,"z":-1.16},{"x":44,"y":8,"made":1,"attempts":1,"z":1.19},{"x":44,"y":22,"made":1,"attempts":1,"z":1.63},{"x":44,"y":26,"made":0,"attempts":1,"z":-0.78},{"x":44,"y":15,"made":1,"attempts":1,"z":1.34},{"x":28,"y":8,"made":3,"attempts":4,"z":1.11},{"x":28,"y":10,"made":1,"attempts":1,"z":1.61},{"x":28,"y":11,"made":2,"attempts":3,"z":0.81},{"x":28,"y":7,"made":4,"attempts":7,"z":0.64},{"x":28,"y":22,"made":0,"attempts":1,"z":-0.85},{"x":28,"y":30,"made":1,"attempts":1,"z":1.28},{"x":28,"y":23,"made":0,"attempts":1,"z":-0.95},{"x":28,"y":6,"made":3,"attempts":5,"z":0.58},{"x":28,"y":9,"made":2,"attempts":2,"z":1.62},{"x":28,"y":13,"made":1,"attempts":1,"z":1.53},{"x":34,"y":21,"made":2,"attempts":3,"z":0.72},{"x":34,"y":23,"made":1,"attempts":5,"z":-0.48},{"x":34,"y":27,"made":2,"attempts":2,"z":1.16},{"x":34,"y":7,"made":2,"attempts":2,"z":1.61},{"x":34,"y":8,"made":0,"attempts":1,"z":-0.85},{"x":34,"y":9,"made":1,"attempts":2,"z":0.35},{"x":34,"y":29,"made":1,"attempts":1,"z":1.45},{"x":34,"y":20,"made":1,"attempts":2,"z":0.25},{"x":34,"y":24,"made":1,"attempts":2,"z":0.14},{"x":34,"y":19,"made":0,"attempts":1,"z":-0.95},{"x":34,"y":10,"made":2,"attempts":2,"z":1.12},{"x":34,"y":32,"made":0,"attempts":1,"z":-0.61},{"x":34,"y":12,"made":1,"attempts":1,"z":1.22},{"x":34,"y":25,"made":0,"attempts":2,"z":-0.8},{"x":34,"y":6,"made":1,"attempts":1,"z":1.5},{"x":34,"y":26,"made":0,"attempts":1,"z":-0.88},{"x":6,"y":23,"made":1,"attempts":6,"z":-0.46},{"x":6,"y":8,"made":0,"attempts":1,"z":-0.89},{"x":6,"y":24,"made":1,"attempts":6,"z":-0.31},{"x":6,"y":14,"made":1,"attempts":3,"z":0.16},{"x":6,"y":7,"made":1,"attempts":2,"z":0.51},{"x":6,"y":9,"made":0,"attempts":1,"z":-0.8},{"x":6,"y":22,"made":1,"attempts":1,"z":1.43},{"x":6,"y":26,"made":0,"attempts":1,"z":-0.46},{"x":6,"y":17,"made":0,"attempts":1,"z":-0.63},{"x":6,"y":11,"made":0,"attempts":1,"z":-0.86},{"x":39,"y":29,"made":1,"attempts":3,"z":-0.01},{"x":39,"y":17,"made":0,"attempts":1,"z":-1.11},{"x":39,"y":8,"made":1,"attempts":4,"z":-0.24},{"x":39,"y":22,"made":1,"attempts":1,"z":1.28},{"x":39,"y":16,"made":1,"attempts":2,"z":0.16},{"x":39,"y":21,"made":0,"attempts":1,"z":-0.81},{"x":39,"y":9,"made":0,"attempts":4,"z":-0.81},{"x":39,"y":26,"made":0,"attempts":1,"z":-0.88},{"x":39,"y":18,"made":1,"attempts":4,"z":-0.37},{"x":39,"y":7,"made":1,"attempts":1,"z":1.27},{"x":39,"y":27,"made":1,"attempts":3,"z":0.02},{"x":39,"y":20,"made":0,"attempts":1,"z":-0.91},{"x":39,"y":13,"made":1,"attempts":1,"z":0.95},{"x":39,"y":14,"made":1,"attempts":3,"z":-0.16},{"x":39,"y":10,"made":0,"attempts":1,"z":-0.92},{"x":39,"y":6,"made":0,"attempts":1,"z":-0.9},{"x":39,"y":28,"made":2,"attempts":2,"z":1.85},{"x":39,"y":25,"made":1,"attempts":1,"z":1.27},{"x":39,"y":23,"made":0,"attempts":1,"z":-0.86},{"x":39,"y":12,"made":0,"attempts":1,"z":-0.76},{"x":1,"y":8,"made":3,"attempts":4,"z":0.85},{"x":1,"y":7,"made":0,"attempts":1,"z":-0.89},{"x":1,"y":6,"made":2,"attempts":2,"z":1.83},{"x":1,"y":10,"made":2,"attempts":3,"z":0.65},{"x":1,"y":12,"made":1,"attempts":1,"z":1.65},{"x":1,"y":13,"made":1,"attempts":1,"z":1.94},{"x":1,"y":9,"made":0,"attempts":1,"z":-0.89},{"x":1,"y":4,"made":0,"attempts":1,"z":-0.97},{"x":37,"y":30,"made":0,"attempts":1,"z":-0.77},{"x":37,"y":27,"made":2,"attempts":2,"z":1.46},{"x":37,"y":22,"made":2,"attempts":4,"z":0.28},{"x":37,"y":15,"made":1,"attempts":2,"z":0.39},{"x":37,"y":8,"made":2,"attempts":2,"z":1.47},{"x":37,"y":23,"made":0,"attempts":1,"z":-0.79},{"x":37,"y":7,"made":1,"attempts":2,"z":0.16},{"x":37,"y":29,"made":1,"attempts":2,"z":0.34},{"x":37,"y":28,"made":2,"attempts":3,"z":0.89},{"x":37,"y":21,"made":0,"attempts":3,"z":-0.9},{"x":37,"y":14,"made":2,"attempts":3,"z":0.66},{"x":37,"y":19,"made":1,"attempts":1,"z":1.28},{"x":37,"y":24,"made":0,"attempts":2,"z":-0.68},{"x":37,"y":17,"made":0,"attempts":1,"z":-0.78},{"x":37,"y":25,"made":0,"attempts":1,"z":-0.58},{"x":37,"y":16,"made":0,"attempts":2,"z":-0.81},{"x":37,"y":9,"made":1,"attempts":1,"z":1.63},{"x":37,"y":32,"made":0,"attempts":1,"z":-0.53},{"x":11,"y":26,"made":0,"attempts":2,"z":-0.85},{"x":11,"y":8,"made":1,"attempts":1,"z":1.59},{"x":11,"y":28,"made":2,"attempts":4,"z":0.38},{"x":11,"y":29,"made":1,"attempts":3,"z":-0.15},{"x":11,"y":15,"made":0,"attempts":1,"z":-0.8},{"x":11,"y":20,"made":0,"attempts":1,"z":-0.83},{"x":11,"y":23,"made":0,"attempts":1,"z":-0.92},{"x":11,"y":27,"made":1,"attempts":4,"z":-0.41},{"x":11,"y":17,"made":0,"attempts":2,"z":-0.98},{"x":11,"y":19,"made":1,"attempts":1,"z":1.26},{"x":11,"y":12,"made":0,"attempts":1,"z":-0.87},{"x":11,"y":9,"made":0,"attempts":1,"z":-0.81},{"x":11,"y":18,"made":0,"attempts":2,"z":-0.79},{"x":11,"y":21,"made":0,"attempts":2,"z":-1.05},{"x":11,"y":13,"made":0,"attempts":1,"z":-0.83},{"x":11,"y":16,"made":0,"attempts":1,"z":-0.96},{"x":27,"y":12,"made":0,"attempts":2,"z":-0.83},{"x":27,"y":30,"made":0,"attempts":1,"z":-0.81},{"x":27,"y":13,"made":0,"attempts":2,"z":-0.85},{"x":27,"y":6,"made":11,"attempts":16,"z":0.42},{"x":27,"y":7,"made":12,"attempts":14,"z":1.39},{"x":27,"y":8,"made":6,"attempts":8,"z":0.93},{"x":27,"y":32,"made":0,"attempts":1,"z":-0.77},{"x":27,"y":33,"made":1,"attempts":2,"z":-0.01},{"x":27,"y":9,"made":2,"attempts":5,"z":0.1},{"x":27,"y":10,"made":0,"attempts":1,"z":-0.87},{"x":27,"y":31,"made":0,"attempts":2,"z":-0.76},{"x":27,"y":25,"made":0,"attempts":1,"z":-0.91},{"x":27,"y":5,"made":1,"attempts":1,"z":1.19},{"x":27,"y":19,"made":1,"attempts":1,"z":1.08},{"x":27,"y":24,"made":0,"attempts":1,"z":-0.89},{"x":38,"y":21,"made":1,"attempts":2,"z":0.28},{"x":38,"y":12,"made":1,"attempts":1,"z":1.34},{"x":38,"y":22,"made":1,"attempts":3,"z":-0.16},{"x":38,"y":10,"made":1,"attempts":2,"z":0.21},{"x":38,"y":28,"made":1,"attempts":1,"z":1.63},{"x":38,"y":7,"made":0,"attempts":2,"z":-0.77},{"x":38,"y":30,"made":0,"attempts":3,"z":-0.58},{"x":38,"y":17,"made":1,"attempts":2,"z":0.25},{"x":38,"y":29,"made":1,"attempts":1,"z":1.8},{"x":38,"y":19,"made":1,"attempts":3,"z":-0.24},{"x":38,"y":15,"made":1,"attempts":2,"z":0.15},{"x":38,"y":8,"made":1,"attempts":1,"z":1.35},{"x":38,"y":33,"made":0,"attempts":1,"z":0.0},{"x":38,"y":27,"made":1,"attempts":7,"z":-0.67},{"x":38,"y":13,"made":0,"attempts":1,"z":-0.91},{"x":38,"y":6,"made":1,"attempts":1,"z":1.32},{"x":38,"y":16,"made":1,"attempts":1,"z":1.61},{"x":38,"y":9,"made":1,"attempts":1,"z":1.15},{"x":38,"y":26,"made":0,"attempts":1,"z":-0.73},{"x":15,"y":25,"made":1,"attempts":1,"z":1.14},{"x":15,"y":31,"made":0,"attempts":1,"z":-0.94},{"x":15,"y":24,"made":1,"attempts":3,"z":-0.03},{"x":15,"y":12,"made":1,"attempts":2,"z":0.08},{"x":15,"y":20,"made":0,"attempts":1,"z":-0.98},{"x":15,"y":30,"made":1,"attempts":3,"z":-0.01},{"x":15,"y":21,"made":0,"attempts":1,"z":-1.08},{"x":15,"y":22,"made":0,"attempts":2,"z":-0.9},{"x":15,"y":9,"made":0,"attempts":1,"z":-0.85},{"x":15,"y":17,"made":0,"attempts":1,"z":-0.73},{"x":15,"y":19,"made":1,"attempts":1,"z":1.23},{"x":15,"y":29,"made":0,"attempts":1,"z":-0.94},{"x":21,"y":28,"made":0,"attempts":2,"z":-0.61},{"x":21,"y":9,"made":2,"attempts":2,"z":1.68},{"x":21,"y":31,"made":1,"attempts":3,"z":-0.09},{"x":21,"y":8,"made":2,"attempts":2,"z":1.64},{"x":21,"y":7,"made":1,"attempts":1,"z":1.64},{"x":21,"y":11,"made":2,"attempts":2,"z":1.47},{"x":21,"y":29,"made":0,"attempts":1,"z":-0.77},{"x":45,"y":21,"made":3,"attempts":4,"z":0.8},{"x":45,"y":22,"made":1,"attempts":2,"z":0.39},{"x":45,"y":19,"made":0,"attempts":2,"z":-0.77},{"x":45,"y":20,"made":1,"attempts":5,"z":-0.35},{"x":45,"y":26,"made":1,"attempts":1,"z":1.73},{"x":45,"y":27,"made":1,"attempts":1,"z":2.0},{"x":45,"y":6,"made":0,"attempts":2,"z":-0.83},{"x":45,"y":14,"made":2,"attempts":3,"z":1.08},{"x":45,"y":8,"made":0,"attempts":1,"z":-0.77},{"x":45,"y":18,"made":0,"attempts":1,"z":-1.0},{"x":45,"y":11,"made":1,"attempts":1,"z":1.31},{"x":45,"y":25,"made":0,"attempts":1,"z":-0.9},{"x":45,"y":12,"made":0,"attempts":1,"z":-0.74},{"x":47,"y":18,"made":0,"attempts":3,"z":-0.87},{"x":47,"y":3,"made":1,"attempts":1,"z":1.5},{"x":47,"y":19,"made":1,"attempts":2,"z":0.3},{"x":47,"y":6,"made":0,"attempts":1,"z":-0.98},{"x":47,"y":7,"made":0,"attempts":1,"z":-0.92},{"x":47,"y":4,"made":1,"attempts":1,"z":0.97},{"x":47,"y":16,"made":1,"attempts":1,"z":1.44},{"x":47,"y":17,"made":1,"attempts":1,"z":1.73},{"x":31,"y":30,"made":3,"attempts":5,"z":0.45},{"x":31,"y":16,"made":0,"attempts":2,"z":-0.86},{"x":31,"y":28,"made":1,"attempts":1,"z":1.3},{"x":31,"y":17,"made":1,"attempts":1,"z":1.63},{"x":31,"y":8,"made":2,"attempts":3,"z":0.71},{"x":31,"y":11,"made":3,"attempts":5,"z":0.49},{"x":31,"y":7,"made":0,"attempts":1,"z":-1.04},{"x":31,"y":24,"made":0,"attempts":1,"z":-0.84},{"x":31,"y":12,"made":3,"attempts":3,"z":1.36},{"x":31,"y":10,"made":1,"attempts":4,"z":-0.29},{"x":31,"y":23,"made":1,"attempts":1,"z":1.14},{"x":31,"y":9,"made":3,"attempts":5,"z":0.58},{"x":31,"y":32,"made":1,"attempts":1,"z":1.51},{"x":18,"y":25,"made":1,"attempts":2,"z":0.26},{"x":18,"y":8,"made":0,"attempts":1,"z":-0.98},{"x":18,"y":30,"made":1,"attempts":2,"z":0.39},{"x":18,"y":31,"made":1,"attempts":2,"z":0.31},{"x":18,"y":17,"made":3,"attempts":3,"z":1.4},{"x":18,"y":21,"made":0,"attempts":1,"z":-1.04},{"x":18,"y":12,"made":1,"attempts":1,"z":1.43},{"x":18,"y":46,"made":0,"attempts":1,"z":0.0},{"x":18,"y":14,"made":1,"attempts":1,"z":1.22},{"x":18,"y":24,"made":0,"attempts":1,"z":-0.85},{"x":13,"y":28,"made":1,"attempts":2,"z":0.39},{"x":13,"y":5,"made":0,"attempts":1,"z":-1.16},{"x":13,"y":13,"made":1,"attempts":2,"z":0.47},{"x":13,"y":7,"made":0,"attempts":1,"z":-0.68},{"x":13,"y":34,"made":0,"attempts":1,"z":-0.58},{"x":13,"y":30,"made":1,"attempts":2,"z":0.31},{"x":13,"y":29,"made":0,"attempts":1,"z":-0.84},{"x":13,"y":19,"made":1,"attempts":1,"z":1.43},{"x":13,"y":16,"made":0,"attempts":1,"z":-0.9},{"x":13,"y":24,"made":1,"attempts":3,"z":-0.06},{"x":13,"y":27,"made":1,"attempts":1,"z":1.23},{"x":13,"y":20,"made":0,"attempts":1,"z":-0.89},{"x":13,"y":22,"made":1,"attempts":1,"z":1.24},{"x":13,"y":23,"made":0,"attempts":1,"z":-0.76},{"x":42,"y":26,"made":1,"attempts":2,"z":0.8},{"x":42,"y":21,"made":1,"attempts":1,"z":1.68},{"x":42,"y":23,"made":0,"attempts":3,"z":-0.89},{"x":42,"y":17,"made":1,"attempts":1,"z":1.33},{"x":42,"y":15,"made":0,"attempts":2,"z":-0.98},{"x":42,"y":7,"made":1,"attempts":3,"z":-0.12},{"x":42,"y":16,"made":2,"attempts":3,"z":0.6},{"x":42,"y":24,"made":2,"attempts":9,"z":-0.33},{"x":42,"y":6,"made":1,"attempts":1,"z":1.28},{"x":42,"y":31,"made":0,"attempts":1,"z":-0.58},{"x":42,"y":25,"made":3,"attempts":3,"z":1.61},{"x":42,"y":12,"made":0,"attempts":1,"z":-0.96},{"x":42,"y":8,"made":1,"attempts":1,"z":1.42},{"x":42,"y":18,"made":1,"attempts":1,"z":1.43},{"x":42,"y":9,"made":0,"attempts":2,"z":-0.86},{"x":42,"y":14,"made":1,"attempts":1,"z":1.24},{"x":42,"y":10,"made":1,"attempts":1,"z":1.22},{"x":43,"y":22,"made":2,"attempts":4,"z":0.22},{"x":43,"y":9,"made":1,"attempts":2,"z":0.21},{"x":43,"y":12,"made":1,"attempts":1,"z":1.27},{"x":43,"y":17,"made":0,"attempts":1,"z":-1.14},{"x":43,"y":15,"made":1,"attempts":1,"z":1.08},{"x":43,"y":23,"made":0,"attempts":2,"z":-0.84},{"x":43,"y":4,"made":1,"attempts":1,"z":1.31},{"x":43,"y":11,"made":1,"attempts":1,"z":1.45},{"x":43,"y":8,"made":1,"attempts":1,"z":1.39},{"x":43,"y":6,"made":0,"attempts":1,"z":-0.88},{"x":43,"y":25,"made":0,"attempts":1,"z":-0.83},{"x":43,"y":18,"made":1,"attempts":2,"z":0.25},{"x":43,"y":24,"made":0,"attempts":2,"z":-0.99},{"x":29,"y":9,"made":2,"attempts":4,"z":0.28},{"x":29,"y":6,"made":1,"attempts":1,"z":1.53},{"x":29,"y":7,"made":1,"attempts":4,"z":-0.23},{"x":29,"y":46,"made":0,"attempts":1,"z":0.0},{"x":29,"y":32,"made":0,"attempts":2,"z":-0.72},{"x":29,"y":42,"made":0,"attempts":3,"z":-0.5},{"x":29,"y":8,"made":0,"attempts":1,"z":-0.75},{"x":29,"y":15,"made":0,"attempts":1,"z":-0.72},{"x":29,"y":30,"made":0,"attempts":1,"z":-0.78},{"x":29,"y":26,"made":0,"attempts":1,"z":-0.8},{"x":29,"y":10,"made":1,"attempts":1,"z":1.54},{"x":3,"y":18,"made":0,"attempts":2,"z":-0.89},{"x":3,"y":19,"made":1,"attempts":4,"z":-0.29},{"x":16,"y":30,"made":0,"attempts":5,"z":-0.89},{"x":16,"y":18,"made":1,"attempts":2,"z":0.2},{"x":16,"y":26,"made":0,"attempts":1,"z":-0.68},{"x":16,"y":29,"made":1,"attempts":1,"z":1.73},{"x":16,"y":20,"made":1,"attempts":3,"z":-0.24},{"x":16,"y":10,"made":1,"attempts":1,"z":1.43},{"x":16,"y":24,"made":1,"attempts":2,"z":0.15},{"x":16,"y":15,"made":1,"attempts":1,"z":0.9},{"x":46,"y":20,"made":1,"attempts":1,"z":1.51},{"x":46,"y":18,"made":1,"attempts":1,"z":1.43},{"x":46,"y":24,"made":0,"attempts":1,"z":-0.77},{"x":46,"y":11,"made":1,"attempts":1,"z":0.81},{"x":46,"y":22,"made":1,"attempts":1,"z":1.34},{"x":46,"y":21,"made":0,"attempts":1,"z":-0.79},{"x":46,"y":19,"made":0,"attempts":2,"z":-0.99},{"x":46,"y":17,"made":0,"attempts":1,"z":-0.87},{"x":10,"y":27,"made":2,"attempts":7,"z":-0.05},{"x":10,"y":13,"made":1,"attempts":1,"z":1.3},{"x":10,"y":16,"made":1,"attempts":4,"z":-0.22},{"x":10,"y":26,"made":0,"attempts":1,"z":-0.87},{"x":10,"y":28,"made":0,"attempts":1,"z":-0.86},{"x":10,"y":10,"made":0,"attempts":1,"z":-0.97},{"x":10,"y":23,"made":1,"attempts":1,"z":1.62},{"x":10,"y":12,"made":0,"attempts":1,"z":-0.67},{"x":10,"y":15,"made":1,"attempts":1,"z":1.38},{"x":10,"y":33,"made":0,"attempts":1,"z":0.0},{"x":7,"y":25,"made":0,"attempts":2,"z":-0.74},{"x":7,"y":9,"made":1,"attempts":2,"z":0.07},{"x":7,"y":24,"made":1,"attempts":2,"z":0.3},{"x":7,"y":6,"made":2,"attempts":2,"z":1.33},{"x":7,"y":17,"made":0,"attempts":1,"z":-0.87},{"x":7,"y":13,"made":1,"attempts":1,"z":1.01},{"x":7,"y":12,"made":1,"attempts":1,"z":1.24},{"x":7,"y":10,"made":0,"attempts":1,"z":-0.92},{"x":7,"y":23,"made":1,"attempts":1,"z":1.52},{"x":4,"y":19,"made":2,"attempts":2,"z":1.49},{"x":4,"y":20,"made":1,"attempts":1,"z":1.43},{"x":4,"y":21,"made":2,"attempts":3,"z":0.85},{"x":4,"y":22,"made":1,"attempts":1,"z":1.36},{"x":4,"y":8,"made":0,"attempts":1,"z":-0.9},{"x":4,"y":13,"made":0,"attempts":2,"z":-1.22},{"x":4,"y":10,"made":0,"attempts":1,"z":-0.68},{"x":5,"y":22,"made":1,"attempts":4,"z":-0.27},{"x":5,"y":21,"made":2,"attempts":4,"z":0.34},{"x":5,"y":5,"made":1,"attempts":1,"z":1.0},{"x":5,"y":23,"made":1,"attempts":2,"z":0.55},{"x":5,"y":12,"made":1,"attempts":1,"z":1.28},{"x":5,"y":24,"made":0,"attempts":1,"z":-0.79},{"x":5,"y":15,"made":0,"attempts":1,"z":-0.71},{"x":0,"y":7,"made":0,"attempts":1,"z":-0.74}]; 
-d3.select("#chart")
-  .append("svg")
-  .chart("BasketballShotChart", {
-	width: 600, 
-	title: 'Lebron James 2013-14',
-	hexagonFillValue: function(d) {  return d.z; }, 
-	// reverse the heat range to map our z values to other colors
-	heatScale: d3.scale.quantile()
-	  .domain([-2.5, 2.5])
-	  .range(['#5458A2', '#6689BB', '#FADC97', '#F08460', '#B02B48']),
-	hexagonBin: function (point, bin) {
-	  var currentZ = bin.z || 0;
-	  var totalAttempts = bin.attempts || 0;
-	  var totalZ = currentZ * totalAttempts;
+	// extend
+	// Borrowed from Underscore.js
+	function extend(object) {
+		var argsIndex, argsLength, iteratee, key;
+		if (!object) {
+			return object;
+		}
+		argsLength = arguments.length;
+		for (argsIndex = 1; argsIndex < argsLength; argsIndex++) {
+			iteratee = arguments[argsIndex];
+			if (iteratee) {
+				for (key in iteratee) {
+					object[key] = iteratee[key];
+				}
+			}
+		}
+		return object;
+	}
 
-	  var attempts = point.attempts || 1;
-	  bin.attempts = totalAttempts + attempts;
-	  bin.z = (totalZ + (point.z * attempts))/bin.attempts;
-	},
-	// update radius threshold to at least 4 shots to clean up the chart
-	hexagonRadiusThreshold: 4,
-  })
-  .draw(data);
+	/**
+	 * Call the {@Chart#initialize} method up the inheritance chain, starting with
+	 * the base class and continuing "downward".
+	 *
+	 * @private
+	 */
+	var initCascade = function(instance, args) {
+		var ctor = this.constructor;
+		var sup = ctor.__super__;
+		if (sup) {
+			initCascade.call(sup, instance, args);
+		}
+
+		// Do not invoke the `initialize` method on classes further up the
+		// prototype chain (again).
+		if (hasOwnProp.call(ctor.prototype, "initialize")) {
+			this.initialize.apply(instance, args);
+		}
+	};
+
+	/**
+	 * Call the `transform` method down the inheritance chain, starting with the
+	 * instance and continuing "upward". The result of each transformation should
+	 * be supplied as input to the next.
+	 *
+	 * @private
+	 */
+	var transformCascade = function(instance, data) {
+		var ctor = this.constructor;
+		var sup = ctor.__super__;
+
+		// Unlike `initialize`, the `transform` method has significance when
+		// attached directly to a chart instance. Ensure that this transform takes
+		// first but is not invoked on later recursions.
+		if (this === instance && hasOwnProp.call(this, "transform")) {
+			data = this.transform(data);
+		}
+
+		// Do not invoke the `transform` method on classes further up the prototype
+		// chain (yet).
+		if (hasOwnProp.call(ctor.prototype, "transform")) {
+			data = ctor.prototype.transform.call(instance, data);
+		}
+
+		if (sup) {
+			data = transformCascade.call(sup, instance, data);
+		}
+
+		return data;
+	};
+
+	/**
+	 * Create a d3.chart
+	 *
+	 * @constructor
+	 * @externalExample {runnable} chart
+	 *
+	 * @param {d3.selection} selection The chart's "base" DOM node. This should
+	 *        contain any nodes that the chart generates.
+	 * @param {mixed} chartOptions A value for controlling how the chart should be
+	 *        created. This value will be forwarded to {@link Chart#initialize}, so
+	 *        charts may define additional properties for consumers to modify their
+	 *        behavior during initialization. The following attributes will be
+	 *        copied onto the chart instance (if present):
+	 * @param {Function} [chartOptions.transform] - A data transformation function
+	 *        unique to the Chart instance being created. If specified, this
+	 *        function will be invoked after all inherited implementations as part
+	 *        of the `Chart#draw` operation.
+	 * @param {Function} [chartOptions.demux] - A data filtering function for
+	 *        attachment charts. If specified, this function will be invoked with
+	 *        every {@link Chart#draw|draw} operation and provided with two
+	 *        arguments: the attachment name (see {@link Chart#attach}) and the
+	 *        data.
+	 *
+	 * @constructor
+	 */
+	var Chart = function(selection, chartOptions) {
+		this.base = selection;
+		this._layers = {};
+		this._attached = {};
+		this._events = {};
+
+		if (chartOptions && chartOptions.transform) {
+			this.transform = chartOptions.transform;
+		}
+
+		initCascade.call(this, this, [chartOptions]);
+	};
+
+	/**
+	 * Set up a chart instance. This method is intended to be overridden by Charts
+	 * authored with this library. It will be invoked with a single argument: the
+	 * `options` value supplied to the {@link Chart|constructor}.
+	 *
+	 * For charts that are defined as extensions of other charts using
+	 * `Chart.extend`, each chart's `initilize` method will be invoked starting
+	 * with the "oldest" ancestor (see the private {@link initCascade} function for
+	 * more details).
+	 */
+	Chart.prototype.initialize = function() {};
+
+	/**
+	 * Remove a layer from the chart.
+	 *
+	 * @externalExample chart-unlayer
+	 *
+	 * @param {String} name The name of the layer to remove.
+	 *
+	 * @returns {Layer} The layer removed by this operation.
+	 */
+	Chart.prototype.unlayer = function(name) {
+		var layer = this.layer(name);
+
+		delete this._layers[name];
+		delete layer._chart;
+
+		return layer;
+	};
+
+	/**
+	 * Interact with the chart's {@link Layer|layers}.
+	 *
+	 * If only a `name` is provided, simply return the layer registered to that
+	 * name (if any).
+	 *
+	 * If a `name` and `selection` are provided, treat the `selection` as a
+	 * previously-created layer and attach it to the chart with the specified
+	 * `name`.
+	 *
+	 * If all three arguments are specified, initialize a new {@link Layer} using
+	 * the specified `selection` as a base passing along the specified `options`.
+	 *
+	 * The {@link Layer.draw} method of attached layers will be invoked
+	 * whenever this chart's {@link Chart#draw} is invoked and will receive the
+	 * data (optionally modified by the chart's {@link Chart#transform} method.
+	 *
+	 * @externalExample chart-layer
+	 *
+	 * @param {String} name Name of the layer to attach or retrieve.
+	 * @param {d3.selection|Layer} [selection] The layer's base or a
+	 *        previously-created {@link Layer}.
+	 * @param {Object} [options] Options to be forwarded to {@link Layer|the Layer
+	 *        constructor}
+	 *
+	 * @returns {Layer}
+	 */
+	Chart.prototype.layer = function(name, selection, options) {
+		var layer;
+
+		if (arguments.length === 1) {
+			return this._layers[name];
+		}
+
+		// we are reattaching a previous layer, which the
+		// selection argument is now set to.
+		if (arguments.length === 2) {
+
+			if (typeof selection.draw === "function") {
+				selection._chart = this;
+				this._layers[name] = selection;
+				return this._layers[name];
+
+			} else {
+				assert(false, "When reattaching a layer, the second argument " +
+					"must be a d3.chart layer");
+			}
+		}
+
+		layer = selection.layer(options);
+
+		this._layers[name] = layer;
+
+		selection._chart = this;
+
+		return layer;
+	};
+
+	/**
+	 * Register or retrieve an "attachment" Chart. The "attachment" chart's `draw`
+	 * method will be invoked whenever the containing chart's `draw` method is
+	 * invoked.
+	 *
+	 * @externalExample chart-attach
+	 *
+	 * @param {String} attachmentName Name of the attachment
+	 * @param {Chart} [chart] d3.chart to register as a mix in of this chart. When
+	 *        unspecified, this method will return the attachment previously
+	 *        registered with the specified `attachmentName` (if any).
+	 *
+	 * @returns {Chart} Reference to this chart (chainable).
+	 */
+	Chart.prototype.attach = function(attachmentName, chart) {
+		if (arguments.length === 1) {
+			return this._attached[attachmentName];
+		}
+
+		this._attached[attachmentName] = chart;
+		return chart;
+	};
+
+	/**
+	 * A "hook" method that you may define to modify input data before it is used
+	 * to draw the chart's layers and attachments. This method will be used by all
+	 * sub-classes (see {@link transformCascade} for details).
+	 *
+	 * Note you will most likely never call this method directly, but rather
+	 * include it as part of a chart definition, and then rely on d3.chart to
+	 * invoke it when you draw the chart with {@link Chart#draw}.
+	 *
+	 * @externalExample {runnable} chart-transform
+	 *
+	 * @param {Array} data Input data provided to @link Chart#draw}.
+	 *
+	 * @returns {mixed} Data to be used in drawing the chart's layers and
+	 *                  attachments.
+	 */
+	Chart.prototype.transform = function(data) {
+		return data;
+	};
+
+	/**
+	 * Update the chart's representation in the DOM, drawing all of its layers and
+	 * any "attachment" charts (as attached via {@link Chart#attach}).
+	 *
+	 * @externalExample chart-draw
+	 *
+	 * @param {Object} data Data to pass to the {@link Layer#draw|draw method} of
+	 *        this cart's {@link Layer|layers} (if any) and the {@link
+	 *        Chart#draw|draw method} of this chart's attachments (if any).
+	 */
+	Chart.prototype.draw = function(data) {
+
+		var layerName, attachmentName, attachmentData;
+
+		data = transformCascade.call(this, this, data);
+
+		for (layerName in this._layers) {
+			this._layers[layerName].draw(data);
+		}
+
+		for (attachmentName in this._attached) {
+			if (this.demux) {
+				attachmentData = this.demux(attachmentName, data);
+			} else {
+				attachmentData = data;
+			}
+			this._attached[attachmentName].draw(attachmentData);
+		}
+	};
+
+	/**
+	 * Function invoked with the context specified when the handler was bound (via
+	 * {@link Chart#on} {@link Chart#once}).
+	 *
+	 * @callback ChartEventHandler
+	 * @param {...*} arguments Invoked with the arguments passed to {@link
+	 *         Chart#trigger}
+	 */
+
+	/**
+	 * Subscribe a callback function to an event triggered on the chart. See {@link
+	 * Chart#once} to subscribe a callback function to an event for one occurence.
+	 *
+	 * @externalExample {runnable} chart-on
+	 *
+	 * @param {String} name Name of the event
+	 * @param {ChartEventHandler} callback Function to be invoked when the event
+	 *        occurs
+	 * @param {Object} [context] Value to set as `this` when invoking the
+	 *        `callback`. Defaults to the chart instance.
+	 *
+	 * @returns {Chart} A reference to this chart (chainable).
+	 */
+	Chart.prototype.on = function(name, callback, context) {
+		var events = this._events[name] || (this._events[name] = []);
+		events.push({
+			callback: callback,
+			context: context || this,
+			_chart: this
+		});
+		return this;
+	};
+
+	/**
+	 * Subscribe a callback function to an event triggered on the chart. This
+	 * function will be invoked at the next occurance of the event and immediately
+	 * unsubscribed. See {@link Chart#on} to subscribe a callback function to an
+	 * event indefinitely.
+	 *
+	 * @externalExample {runnable} chart-once
+	 *
+	 * @param {String} name Name of the event
+	 * @param {ChartEventHandler} callback Function to be invoked when the event
+	 *        occurs
+	 * @param {Object} [context] Value to set as `this` when invoking the
+	 *        `callback`. Defaults to the chart instance
+	 *
+	 * @returns {Chart} A reference to this chart (chainable)
+	 */
+	Chart.prototype.once = function(name, callback, context) {
+		var self = this;
+		var once = function() {
+			self.off(name, once);
+			callback.apply(this, arguments);
+		};
+		return this.on(name, once, context);
+	};
+
+	/**
+	 * Unsubscribe one or more callback functions from an event triggered on the
+	 * chart. When no arguments are specified, *all* handlers will be unsubscribed.
+	 * When only a `name` is specified, all handlers subscribed to that event will
+	 * be unsubscribed. When a `name` and `callback` are specified, only that
+	 * function will be unsubscribed from that event. When a `name` and `context`
+	 * are specified (but `callback` is omitted), all events bound to the given
+	 * event with the given context will be unsubscribed.
+	 *
+	 * @externalExample {runnable} chart-off
+	 *
+	 * @param {String} [name] Name of the event to be unsubscribed
+	 * @param {ChartEventHandler} [callback] Function to be unsubscribed
+	 * @param {Object} [context] Contexts to be unsubscribe
+	 *
+	 * @returns {Chart} A reference to this chart (chainable).
+	 */
+	Chart.prototype.off = function(name, callback, context) {
+		var names, n, events, event, i, j;
+
+		// remove all events
+		if (arguments.length === 0) {
+			for (name in this._events) {
+				this._events[name].length = 0;
+			}
+			return this;
+		}
+
+		// remove all events for a specific name
+		if (arguments.length === 1) {
+			events = this._events[name];
+			if (events) {
+				events.length = 0;
+			}
+			return this;
+		}
+
+		// remove all events that match whatever combination of name, context
+		// and callback.
+		names = name ? [name] : Object.keys(this._events);
+		for (i = 0; i < names.length; i++) {
+			n = names[i];
+			events = this._events[n];
+			j = events.length;
+			while (j--) {
+				event = events[j];
+				if ((callback && callback === event.callback) ||
+						(context && context === event.context)) {
+					events.splice(j, 1);
+				}
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Publish an event on this chart with the given `name`.
+	 *
+	 * @externalExample {runnable} chart-trigger
+	 *
+	 * @param {String} name Name of the event to publish
+	 * @param {...*} arguments Values with which to invoke the registered
+	 *        callbacks.
+	 *
+	 * @returns {Chart} A reference to this chart (chainable).
+	 */
+	Chart.prototype.trigger = function(name) {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var events = this._events[name];
+		var i, ev;
+
+		if (events !== undefined) {
+			for (i = 0; i < events.length; i++) {
+				ev = events[i];
+				ev.callback.apply(ev.context, args);
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Create a new {@link Chart} constructor with the provided options acting as
+	 * "overrides" for the default chart instance methods. Allows for basic
+	 * inheritance so that new chart constructors may be defined in terms of
+	 * existing chart constructors. Based on the `extend` function defined by
+	 * [Backbone.js](http://backbonejs.org/).
+	 *
+	 * @static
+	 * @externalExample {runnable} chart-extend
+	 *
+	 * @param {String} name Identifier for the new Chart constructor.
+	 * @param {Object} protoProps Properties to set on the new chart's prototype.
+	 * @param {Object} staticProps Properties to set on the chart constructor
+	 *        itself.
+	 *
+	 * @returns {Function} A new Chart constructor
+	 */
+	Chart.extend = function(name, protoProps, staticProps) {
+		var parent = this;
+		var child;
+
+		// The constructor function for the new subclass is either defined by
+		// you (the "constructor" property in your `extend` definition), or
+		// defaulted by us to simply call the parent's constructor.
+		if (protoProps && hasOwnProp.call(protoProps, "constructor")) {
+			child = protoProps.constructor;
+		} else {
+			child = function(){ return parent.apply(this, arguments); };
+		}
+
+		// Add static properties to the constructor function, if supplied.
+		extend(child, parent, staticProps);
+
+		// Set the prototype chain to inherit from `parent`, without calling
+		// `parent`'s constructor function.
+		var Surrogate = function(){ this.constructor = child; };
+		Surrogate.prototype = parent.prototype;
+		child.prototype = new Surrogate();
+
+		// Add prototype properties (instance properties) to the subclass, if
+		// supplied.
+		if (protoProps) { extend(child.prototype, protoProps); }
+
+		// Set a convenience property in case the parent's prototype is needed
+		// later.
+		child.__super__ = parent.prototype;
+
+		Chart[name] = child;
+		return child;
+	};
+
+	module.exports = Chart;
+});
+
+
+/**
+ * Generates accessors for defaults in a d3.chart,
+ * triggers events when they change, and provides
+ * mechanism to bind handlers to those events
+ *
+ * Requires:
+ * - d3.chart
+ */
+(function () {
+
+  // underscore debounce method
+  var debounce = function (func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+
+  // initialize defaults in chart prototype
+  var initDefaults = function (chartProto, defaults) {
+    // Generate setters for default options
+    defaults = d3.map(defaults || {});
+    defaults.forEach(function (option, value) {
+      // set option value
+      var optionName = '_' + option; 
+      chartProto[optionName] = value;
+
+      // setup helper method to set option
+      chartProto[option] = function (_) {
+        // return value of option if not setting
+        if (!arguments.length) return this[optionName];
+
+        // otherwise set value
+        this[optionName] = _;
+
+        // trigger change handler for event
+        this.trigger('change:' + option, _);
+
+        // return this to chain
+        return this;   
+      };
+    });      
+
+    // if we have defaults, make sure we override defaults
+    if (defaults.size()) {
+      // override initialize method to initialize any options
+      var oldInit = chartProto.initialize;
+      chartProto.initialize = function (options) {
+        // set value for any options that are defaults
+        for (var optionName in options) {
+          if (defaults.get(optionName)) {
+            this['_' + optionName] = options[optionName];
+          }
+        }
+        
+        // call old initialize method
+        oldInit.apply(this, arguments);
+      }
+    }
+  };
+
+  // initializes any associated events with defaults
+  var initEvents = function (chartProto, events) {
+    events = d3.map(events || {});
+    if (events.size() > 0) {
+      // create shared handler pool (to deal with debounced methods)
+      var values = events.values();
+      var handlers = {};
+      for (var i = 0, l = values.length; i < l; ++i) {
+        var value = values[i];
+        var fn = value;
+        var debounce = false;
+        if (value.match(/^debounce:/i)) {
+          fn = value.substr(9);
+          debounce = true;
+        } 
+        handlers[value] = {fn: chartProto[fn], debounce: debounce};
+      }
+
+      // override initialize method to bind events
+      var oldInit = chartProto.initialize;
+      chartProto.initialize = function () {
+        // call old initialize method
+        oldInit.apply(this, arguments);
+
+        // bind handlers to this
+        for (var handler in handlers) {
+          var o = handlers[handler];
+          var boundFn = o.fn.bind(this);
+          o.boundFn = o.debounce ? debounce(boundFn) : boundFn;
+        }
+
+        // bind events
+        var self = this;
+        events.forEach(function (eventNames, handler) {
+          var names = eventNames.split(/\s+/); 
+          for (var i = 0, l = names.length; i < l; ++i) {
+            self.on('change:' + names[i], handlers[handler].boundFn); 
+          }
+        });
+      };
+    }
+  };
+
+  // define exports
+  d3.chart.initializeDefaults = function (chart, defaults, events) {
+    chartProto = chart.prototype;
+    initDefaults(chartProto, defaults);
+    initEvents(chartProto, events);
+  };
+
+})();
+
+(function() {
+
+	d3.hexbin = function() {
+	  var width = 1,
+		  height = 1,
+		  r,
+		  x = d3_hexbinX,
+		  y = d3_hexbinY,
+		  binCallback,
+		  dx,
+		  dy;
+	
+	  function hexbin(points) {
+		var binsById = {};
+	
+		points.forEach(function(point, i) {
+		  var py = y.call(hexbin, point, i) / dy, pj = Math.round(py),
+			  px = x.call(hexbin, point, i) / dx - (pj & 1 ? .5 : 0), pi = Math.round(px),
+			  py1 = py - pj;
+	
+		  if (Math.abs(py1) * 3 > 1) {
+			var px1 = px - pi,
+				pi2 = pi + (px < pi ? -1 : 1) / 2,
+				pj2 = pj + (py < pj ? -1 : 1),
+				px2 = px - pi2,
+				py2 = py - pj2;
+			if (px1 * px1 + py1 * py1 > px2 * px2 + py2 * py2) pi = pi2 + (pj & 1 ? 1 : -1) / 2, pj = pj2;
+		  }
+	
+		  var id = pi + "-" + pj, bin = binsById[id];
+		  if (bin) bin.push(point); else {
+			bin = binsById[id] = [point];
+			bin.i = pi;
+			bin.j = pj;
+			bin.x = (pi + (pj & 1 ? 1 / 2 : 0)) * dx;
+			bin.y = pj * dy;
+		  }
+		  if (binCallback) binCallback(point, bin);
+		});
+	
+		return d3.values(binsById);
+	  }
+	
+	  function hexagon(radius) {
+		var x0 = 0, y0 = 0;
+		return d3_hexbinAngles.map(function(angle) {
+		  var x1 = Math.sin(angle) * radius,
+			  y1 = -Math.cos(angle) * radius,
+			  dx = x1 - x0,
+			  dy = y1 - y0;
+		  x0 = x1, y0 = y1;
+		  return [dx, dy];
+		});
+	  }
+	
+	  hexbin.x = function(_) {
+		if (!arguments.length) return x;
+		x = _;
+		return hexbin;
+	  };
+	
+	  hexbin.y = function(_) {
+		if (!arguments.length) return y;
+		y = _;
+		return hexbin;
+	  };
+		 
+	  hexbin.bin = function(_) {
+		if (!arguments.length) return binCallback;
+		binCallback = _;
+		return hexbin;
+	  };
+		 
+	  hexbin.hexagon = function(radius) {
+		if (arguments.length < 1) radius = r;
+		return "m" + hexagon(radius).join("l") + "z";
+	  };
+	
+	  hexbin.centers = function() {
+		var centers = [];
+		for (var y = 0, odd = false, j = 0; y < height + r; y += dy, odd = !odd, ++j) {
+		  for (var x = odd ? dx / 2 : 0, i = 0; x < width + dx / 2; x += dx, ++i) {
+			var center = [x, y];
+			center.i = i;
+			center.j = j;
+			centers.push(center);
+		  }
+		}
+		return centers;
+	  };
+	
+	  hexbin.mesh = function() {
+		var fragment = hexagon(r).slice(0, 4).join("l");
+		return hexbin.centers().map(function(p) { return "M" + p + "m" + fragment; }).join("");
+	  };
+	
+	  hexbin.size = function(_) {
+		if (!arguments.length) return [width, height];
+		width = +_[0], height = +_[1];
+		return hexbin;
+	  };
+	
+	  hexbin.radius = function(_) {
+		if (!arguments.length) return r;
+		r = +_;
+		dx = r * 2 * Math.sin(Math.PI / 3);
+		dy = r * 1.5;
+		return hexbin;
+	  };
+	
+	  return hexbin.radius(1);
+	};
+	
+	var d3_hexbinAngles = d3.range(0, 2 * Math.PI, Math.PI / 3),
+		d3_hexbinX = function(d) { return d[0]; },
+		d3_hexbinY = function(d) { return d[1]; };
+	
+	})();
