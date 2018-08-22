@@ -1,5 +1,3 @@
-(function() {
-
 	d3.hexbin = function() {
 	  var width = 1,
 		  height = 1,
@@ -115,8 +113,7 @@
 		d3_hexbinX = function(d) { return d[0]; },
 		d3_hexbinY = function(d) { return d[1]; };
 	
-})();
-(function() {
+
 	var assert = function(test, message) {
 		if (test) {
 			return;
@@ -1017,8 +1014,6 @@
     initEvents(chartProto, events);
   };
 
-})();
-(function () {
 
 	var clipCounter = 0;
   
@@ -1440,5 +1435,3 @@
 	  // width of svg
 	  width: 500,
 	});
-  
-})()
