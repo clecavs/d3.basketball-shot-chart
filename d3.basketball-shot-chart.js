@@ -72,75 +72,75 @@
           .attr('class', 'shot-chart-court');
       if (this._height) base.attr('height', this._height);
                        
-      base.append("rect")
-        .attr('class', 'shot-chart-court-key')
-        .attr("x", (courtWidth / 2 - keyWidth / 2))
-        .attr("y", (visibleCourtLength - freeThrowLineLength))
-        .attr("width", keyWidth)
-        .attr("height", freeThrowLineLength);
+      // base.append("rect")
+      //   .attr('class', 'shot-chart-court-key')
+      //   .attr("x", (courtWidth / 2 - keyWidth / 2))
+      //   .attr("y", (visibleCourtLength - freeThrowLineLength))
+      //   .attr("width", keyWidth)
+      //   .attr("height", freeThrowLineLength);
 
-      base.append("line")
-        .attr('class', 'shot-chart-court-baseline')
-        .attr("x1", 0)
-        .attr("y1", visibleCourtLength)
-        .attr("x2", courtWidth)
-        .attr("y2", visibleCourtLength);
+      // base.append("line")
+      //   .attr('class', 'shot-chart-court-baseline')
+      //   .attr("x1", 0)
+      //   .attr("y1", visibleCourtLength)
+      //   .attr("x2", courtWidth)
+      //   .attr("y2", visibleCourtLength);
               
-      var tpAngle = Math.atan(threePointSideRadius / 
-        (threePointCutoffLength - basketProtrusionLength - basketDiameter/2));
-      this.appendArcPath(base, threePointRadius, -1 * tpAngle, tpAngle)
-        .attr('class', 'shot-chart-court-3pt-line')
-        .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
-          (visibleCourtLength - basketProtrusionLength - basketDiameter / 2) + 
-          ")");
+      // var tpAngle = Math.atan(threePointSideRadius / 
+      //   (threePointCutoffLength - basketProtrusionLength - basketDiameter/2));
+      // this.appendArcPath(base, threePointRadius, -1 * tpAngle, tpAngle)
+      //   .attr('class', 'shot-chart-court-3pt-line')
+      //   .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
+      //     (visibleCourtLength - basketProtrusionLength - basketDiameter / 2) + 
+      //     ")");
          
-      [1, -1].forEach(function (n) {
-        base.append("line")
-          .attr('class', 'shot-chart-court-3pt-line')
-          .attr("x1", courtWidth / 2 + threePointSideRadius * n)
-          .attr("y1", visibleCourtLength - threePointCutoffLength)
-          .attr("x2", courtWidth / 2 + threePointSideRadius * n)
-          .attr("y2", visibleCourtLength);
-      });
+      // [1, -1].forEach(function (n) {
+      //   base.append("line")
+      //     .attr('class', 'shot-chart-court-3pt-line')
+      //     .attr("x1", courtWidth / 2 + threePointSideRadius * n)
+      //     .attr("y1", visibleCourtLength - threePointCutoffLength)
+      //     .attr("x2", courtWidth / 2 + threePointSideRadius * n)
+      //     .attr("y2", visibleCourtLength);
+      // });
         
-      this.appendArcPath(base, restrictedCircleRadius, -1 * Math.PI/2, Math.PI/2)
-        .attr('class', 'shot-chart-court-restricted-area')
-        .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
-          (visibleCourtLength - basketProtrusionLength - basketDiameter / 2) + ")");
+      // this.appendArcPath(base, restrictedCircleRadius, -1 * Math.PI/2, Math.PI/2)
+      //   .attr('class', 'shot-chart-court-restricted-area')
+      //   .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
+      //     (visibleCourtLength - basketProtrusionLength - basketDiameter / 2) + ")");
                                                          
-      this.appendArcPath(base, freeThrowCircleRadius, -1 * Math.PI/2, Math.PI/2)
-        .attr('class', 'shot-chart-court-ft-circle-top')
-        .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
-          (visibleCourtLength - freeThrowLineLength) + ")");
+      // this.appendArcPath(base, freeThrowCircleRadius, -1 * Math.PI/2, Math.PI/2)
+      //   .attr('class', 'shot-chart-court-ft-circle-top')
+      //   .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
+      //     (visibleCourtLength - freeThrowLineLength) + ")");
                                                           
-      this.appendArcPath(base, freeThrowCircleRadius, Math.PI/2, 1.5 * Math.PI)
-        .attr('class', 'shot-chart-court-ft-circle-bottom')
-        .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
-          (visibleCourtLength - freeThrowLineLength) + ")");
+      // this.appendArcPath(base, freeThrowCircleRadius, Math.PI/2, 1.5 * Math.PI)
+      //   .attr('class', 'shot-chart-court-ft-circle-bottom')
+      //   .attr("transform", "translate(" + (courtWidth / 2) + ", " + 
+      //     (visibleCourtLength - freeThrowLineLength) + ")");
 
-      [7, 8, 11, 14].forEach(function (mark) {
-        [1, -1].forEach(function (n) {
-          base.append("line")
-            .attr('class', 'shot-chart-court-key-mark')
-            .attr("x1", courtWidth / 2 + keyWidth / 2 * n + keyMarkWidth * n)
-            .attr("y1", visibleCourtLength - mark)
-            .attr("x2", courtWidth / 2 + keyWidth / 2 * n)
-            .attr("y2", visibleCourtLength - mark)
-        });
-      });    
+      // [7, 8, 11, 14].forEach(function (mark) {
+      //   [1, -1].forEach(function (n) {
+      //     base.append("line")
+      //       .attr('class', 'shot-chart-court-key-mark')
+      //       .attr("x1", courtWidth / 2 + keyWidth / 2 * n + keyMarkWidth * n)
+      //       .attr("y1", visibleCourtLength - mark)
+      //       .attr("x2", courtWidth / 2 + keyWidth / 2 * n)
+      //       .attr("y2", visibleCourtLength - mark)
+      //   });
+      // });    
 
-      base.append("line")
-        .attr('class', 'shot-chart-court-backboard')
-        .attr("x1", courtWidth / 2 - basketWidth / 2)
-        .attr("y1", visibleCourtLength - basketProtrusionLength)
-        .attr("x2", courtWidth / 2 + basketWidth / 2)
-        .attr("y2", visibleCourtLength - basketProtrusionLength)
+      // base.append("line")
+      //   .attr('class', 'shot-chart-court-backboard')
+      //   .attr("x1", courtWidth / 2 - basketWidth / 2)
+      //   .attr("y1", visibleCourtLength - basketProtrusionLength)
+      //   .attr("x2", courtWidth / 2 + basketWidth / 2)
+      //   .attr("y2", visibleCourtLength - basketProtrusionLength)
                                      
-      base.append("circle")
-        .attr('class', 'shot-chart-court-hoop')
-        .attr("cx", courtWidth / 2)
-        .attr("cy", visibleCourtLength - basketProtrusionLength - basketDiameter / 2)
-        .attr("r", basketDiameter / 2)
+      // base.append("circle")
+      //   .attr('class', 'shot-chart-court-hoop')
+      //   .attr("cx", courtWidth / 2)
+      //   .attr("cy", visibleCourtLength - basketProtrusionLength - basketDiameter / 2)
+      //   .attr("r", basketDiameter / 2)
     },
 
     // add title to svg
