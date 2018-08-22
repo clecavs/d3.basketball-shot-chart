@@ -1,7 +1,4 @@
-define(function(require, exports, module) {
-	"use strict";
-	var assert = require("./assert");
-	var hasOwnProp = Object.hasOwnProperty;
+(function () {
 
 	// extend
 	// Borrowed from Underscore.js
@@ -462,9 +459,7 @@ define(function(require, exports, module) {
 		Chart[name] = child;
 		return child;
 	};
-
-	module.exports = Chart;
-});
+})();
 
 
 /**
